@@ -28,9 +28,6 @@ def runC(command, isGrep=False, grepText='', isFloat=False):
             output = ''
     else:
         try:
-            # TODO have to remove code below, cause it executes command synchronically
-            #output = check_output(command, stderr=STDOUT).decode()
-            # output = subprocess.call(command)
             output = float(check_output(command).decode()) if isFloat else subprocess.Popen(command)
         except CalledProcessError as e:
             output = ''
@@ -40,10 +37,10 @@ def checkFfmpeg(output=''):
     check = re.findall(r'ffmpeg -i', output, flags=re.IGNORECASE)
     return len(check) > 0
 
-@app.route('/ff-start', methods=['POST'])
+@app.route('/ff-thumbs', methods=['POST'])
 def start():
     if 'video' not in request.form or request.form.get('video') == '':
-        return Response(json.dumps({"status": "ERR", "message": "missing require body elements"}), mimetype='application/json;charset=UTF-8')
+        return Response(json.dumps({"status": "err", "message": "missing require body elements"}), mimetype='application/json;charset=UTF-8')
 
     try:
         a = runC('ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {0}'.format(request.form.get('video')), None, None, True)
@@ -52,7 +49,7 @@ def start():
         os.system("mkdir /mnt/media/" + thumbsFolder)
         runC('ffmpeg -i {0}  -vf fps=1  -f image2 -y "/mnt/media/{1}/%d.jpg"'.format(request.form.get('video'), thumbsFolder))
     except:
-        return Response(json.dumps({"status": "ERR", "message": "bad video"}), mimetype='application/json;charset=UTF-8')
+        return Response(json.dumps({"status": "err", "message": "bad video"}), mimetype='application/json;charset=UTF-8')
     b = runC('ps aux', True, 'ffmpeg')
     return Response(json.dumps({"status": "ok", "duration": a, "check": checkFfmpeg(b), "thumbs": '/mnt/media/'+thumbsFolder}), mimetype='application/json;charset=UTF-8')
 

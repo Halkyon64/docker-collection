@@ -1,0 +1,43 @@
+{
+	"appenders": [
+	  {
+		"type": "console"
+	  },
+	  {
+		"type": "file",
+		"filename": "./logs/server-debug.log",
+		"maxLogSize": 52428800,
+		"backups": 10
+	  },
+	  {
+		"type": "logLevelFilter",
+		"level": "INFO",
+		"appender": {
+		  "type": "file",
+		  "filename": "./logs/server-info.log",
+		  "maxLogSize": 52428800,
+		  "backups": 10
+		}
+	  },
+	  {
+		"type": "logLevelFilter",
+		"level": "WARN",
+		"appender": {
+		  "type": "file",
+		  "filename": "./logs/server-warn.log",
+		  "maxLogSize": 52428800,
+		  "backups": 10
+		}
+	  },
+	  {
+		"type": "logLevelFilter",
+		"level": "ERROR",
+		"appender": {
+		  "type": "file",
+		  "filename": "./logs/server-error.log",
+		  "maxLogSize": 52428800,
+		  "backups": 10
+		}
+	  }
+	]
+  }
